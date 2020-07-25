@@ -45,8 +45,8 @@ def diffi_score(forest, X, inlier_samples="auto"):
     if k < X_in.shape[0]:
         X_in = X_in[np.random.choice(X_in.shape[0], k, replace=False), :]
 
-    return (_mean_cumulative_importance_(forest, X_out) /
-            _mean_cumulative_importance_(forest, X_in))
+    return (_mean_cumulative_importance(forest, X_out) /
+            _mean_cumulative_importance(forest, X_in))
 
 
 def _mean_cumulative_importance(forest, X):
@@ -88,7 +88,7 @@ def _cumulative_ic(tree, X):
     depth = np.array(node_indicator.sum(axis=1)).reshape(-1)
     node_loads = np.array(node_indicator.sum(axis=0)).reshape(-1)
 
-    iic = _induced_imbalance_coeff_(tree, X, node_loads)
+    iic = _induced_imbalance_coeff(tree, X, node_loads)
     rows, cols = node_indicator.nonzero()
     for i, j in zip(rows, cols):
         f = tree.tree_.feature[j]
