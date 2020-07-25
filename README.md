@@ -5,6 +5,17 @@ A model-based approach to assess global interpretation, in terms of feature impo
 
 This implementation assumes that the model used is an instance of [scikit-learn's Isolation Forest](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.IsolationForest.html#sklearn.ensemble.IsolationForest).
 
+## Usage
+
+```python
+from sklearn.ensemble import IsolationForest
+from diffi.diffi import diffi_score
+
+clf = IsolationForest()
+clf.fit(X)
+
+feature_importance = diffi_score(clf, X)
+```
 
 
 ## References
