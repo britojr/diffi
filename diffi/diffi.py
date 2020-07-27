@@ -1,4 +1,5 @@
 import numpy as np
+from sklearn.ensemble._iforest import _average_path_length
 
 # epsilon as defined in the original paper
 _EPSILON = 1e-2
@@ -85,8 +86,13 @@ def _cumulative_ic(tree, X):
     count = np.zeros(X.shape[1])
 
     node_indicator = tree.decision_path(X)
-    depth = np.array(node_indicator.sum(axis=1)).reshape(-1)
     node_loads = np.array(node_indicator.sum(axis=0)).reshape(-1)
+    # depth is number of edges in path, same as number of nodes in path -1
+    depth = np.array(node_indicator.sum(axis=1), dtype=float).reshape(-1) - 1
+    # when the tree is pruned (i.e. more than one instance at the leaf)
+    # we consider the average path length to adjust depth
+    leaves_index = tree.apply(X)
+    depth += _average_path_length(node_loads[leaves_index])
 
     iic = _induced_imbalance_coeff(tree, X, node_loads)
     rows, cols = node_indicator.nonzero()
